@@ -18,6 +18,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: sans-serif;
 }
 
 #game {
@@ -27,7 +28,7 @@ body {
   height: 768px; */
   flex: 0 0 min(100vw, calc(90vh * 16 / 9));
   height: min(90vh, calc(100vw * 9 / 16));
-  margin-top: 5vh;
+  margin-top: 7vh;
 }
 
 #paysage {
@@ -149,7 +150,6 @@ img {
   position: absolute;
   top: 0;
   left: 0;
-  font-family: sans-serif;
   font-size: 2vw;
   width: 100%;
 }
@@ -220,5 +220,34 @@ img {
   height: 100%;
   top: 0;
   left: 0;
+  z-index: 100;
+}
+
+#settings {
+  position: absolute;
+  right: 1%;
+  top: 2vw;
+  font-size: 1.5vw;
   z-index: 999;
+}
+
+#vibrate {
+  /* transform: scale(); */
+  width: 2vw;
+  height: 2vw;
+}
+
+label[for="vibrate"] {
+  vertical-align: top;
+  line-height: 3vw;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 }

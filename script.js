@@ -5,6 +5,9 @@ let fish = document.querySelector("#fish");
 let divDistance = document.querySelector("#distance");
 let divScore = document.querySelector("#score");
 let divTime = document.querySelector("#time");
+let divOverlay = document.querySelector("#overlay");
+let divVibration = document.querySelector("#vibration");
+let vibrateCheckbox = document.querySelector("#vibrate");
 let goneTimeout = null;
 let pulling = false;
 let distance;
@@ -14,6 +17,7 @@ let nextChange = null;
 let waitTimeout = null;
 let totalWaitPenalty = 0;
 let gameEnd = false;
+let firstClick = true;
 
 const deltaCheck = 250;
 const distance_max = 100;
@@ -26,14 +30,20 @@ const MaxTotalWaitPenalty = 5000;
 const FishClassSize = ["x-small", "small", "medium", "big", "x-big"];
 const FishWeight = [1, 2, 5, 15, 25];
 
+let vibrationsEnabled = false;
+vibrateCheckbox.checked = vibrationsEnabled;
+vibrateCheckbox.addEventListener("change", () => {
+  vibrationsEnabled = vibrateCheckbox.checked;
+});
+
 fish.addEventListener("animationend", () => {
   fish.style.display = "none";
 });
 
-document.addEventListener("mousedown", playerPullStart);
-document.addEventListener("mouseup", playerPullStop);
-document.addEventListener("touchstart", playerPullStart);
-document.addEventListener("touchend", playerPullStop);
+divOverlay.addEventListener("mousedown", playerPullStart);
+divOverlay.addEventListener("mouseup", playerPullStop);
+divOverlay.addEventListener("touchstart", playerPullStart);
+divOverlay.addEventListener("touchend", playerPullStop);
 
 function playerPullStart() {
   player.classList.add("player-pull");
@@ -46,8 +56,13 @@ function playerPullStart() {
     console.debug("Let's try to catch that fish!");
     window.clearTimeout(goneTimeout);
     goneTimeout = null;
+    vibrate(75);
     tryCatchFish();
   } else if (waitTimeout !== null) {
+    if (firstClick) {
+      firstClick = false;
+      return;
+    }
     window.clearTimeout(waitTimeout);
     waitTimeout = null;
     console.debug("Being impatient scares the fish away!");
@@ -69,14 +84,17 @@ async function generateRandomFish() {
   if (gameEnd) return;
   console.debug("Waiting for a fish...");
   waitTimeout = window.setTimeout(() => {
+    if (gameEnd) return;
     waitTimeout = null;
     totalWaitPenalty -= 2 * WaitPenalty;
     if (totalWaitPenalty < 0) totalWaitPenalty = 0;
     console.debug("Found a fish!");
     ligne.classList.replace("wiggle", "fish-caught");
+    vibrate([50, 0, 50]);
     goneTimeout = window.setTimeout(() => {
       goneTimeout = null;
       console.debug("Fish is gone");
+      vibrate(50);
       ligne.classList.replace("fish-caught", "wiggle");
       generateRandomFish();
     }, Math.random() * 1000 + 3000);
@@ -130,6 +148,7 @@ async function tryCatchFish() {
         (strength < 4) + (strength < 3.5) + (strength < 2) + (strength < 1.35);
       if (distance <= 0) {
         console.debug("Caught a fish!");
+        vibrate([75, 0, 75]);
         window.setTimeout(() => {
           score += FishWeight[rank];
           divScore.innerText = `Score: ${score}kg of fish`;
@@ -139,6 +158,7 @@ async function tryCatchFish() {
         fish.style.display = "block";
       } else {
         console.debug("Fish escaped!");
+        vibrate(150);
       }
       generateRandomFish();
     }
@@ -147,9 +167,13 @@ async function tryCatchFish() {
 
 function toggleFishState() {
   console.debug("Fish changes state");
-  if (ligne.classList.contains("fish-pull"))
+  if (ligne.classList.contains("fish-pull")) {
     ligne.classList.replace("fish-pull", "fish-caught");
-  else ligne.classList.replace("fish-caught", "fish-pull");
+    vibrate(75);
+  } else {
+    ligne.classList.replace("fish-caught", "fish-pull");
+    vibrate(120);
+  }
   nextChange = window.setTimeout(toggleFishState, 2000 + Math.random() * 3500);
 }
 
@@ -168,8 +192,35 @@ let mainTimer = window.setInterval(() => {
   if (timeLeft === 0) {
     window.clearInterval(mainTimer);
     gameEnd = true;
+    vibrate([100, 0, 100, 0, 100]);
     divScore.innerHTML = `Well done, you managed to get <b>${score}kg of fish</b>! Get the barbecue ready!`;
   }
 }, 1000);
 
+if (isMobile()) {
+  divVibration.style.display = "block";
+}
+
 generateRandomFish();
+
+// Helper
+
+function isMobile() {
+  const toMatch = [
+    /Android/i,
+    /webOS/i,
+    /iPhone/i,
+    /iPad/i,
+    /iPod/i,
+    /BlackBerry/i,
+    /Windows Phone/i,
+  ];
+
+  return toMatch.some((toMatchItem) => {
+    return navigator.userAgent.match(toMatchItem);
+  });
+}
+
+function vibrate(time) {
+  if (vibrationsEnabled) window.navigator.vibrate(time);
+}

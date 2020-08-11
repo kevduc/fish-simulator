@@ -8,11 +8,17 @@
   </head>
   <body>
     <div id="overlay"></div>
-    <div id="game">
+    <div id="game" class="noselect">
       <div id="stats">
         <div id="distance">&nbsp;</div>
         <div id="score">Score: 0 fish</div>
         <div id="time"></div>
+      </div>
+      <div id="settings">
+        <div id="vibration" style="display: none;">
+          <label for="vibrate">Vibrations</label>
+          <input name="vibrate" id="vibrate" type="checkbox" />
+        </div>
       </div>
       <div id="fish" style="display: none;">
         <img src="./images/fish.png" />
