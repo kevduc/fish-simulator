@@ -30,7 +30,12 @@ fish.addEventListener("animationend", () => {
   fish.style.display = "none";
 });
 
-document.addEventListener("mousedown", () => {
+document.addEventListener("mousedown", playerPullStart);
+document.addEventListener("mouseup", playerPullStop);
+document.addEventListener("touchstart", playerPullStart);
+document.addEventListener("touchend", playerPullStop);
+
+function playerPullStart() {
   player.classList.add("player-pull");
   canne.classList.add("canne-pull");
   ligne.classList.add("ligne-pull");
@@ -51,14 +56,14 @@ document.addEventListener("mousedown", () => {
       totalWaitPenalty = MaxTotalWaitPenalty;
     generateRandomFish();
   }
-});
+}
 
-document.addEventListener("mouseup", () => {
+function playerPullStop() {
   player.classList.remove("player-pull");
   canne.classList.remove("canne-pull");
   ligne.classList.remove("ligne-pull");
   pulling = false;
-});
+}
 
 async function generateRandomFish() {
   if (gameEnd) return;
@@ -104,19 +109,16 @@ async function tryCatchFish() {
     if (distance < 0) distance = 0;
     if (distance > 100) distance = 100;
 
-    distancePercent = Math.round((100 * distance) / distance_max);
+    distancePercent = distance / distance_max;
 
     divDistance.innerHTML = `Distance:&nbsp;${
-      Math.ceil((distancePercent / 100) * 200) / 10
+      Math.ceil(distancePercent * 20 * 10) / 10
     }m`;
-    divDistance.style.width = `${distancePercent}%`;
-    let r =
-      distancePercent >= 50
-        ? (0.75 * distancePercent) / 75
-        : 0.75 + (0.25 * (distancePercent - 75)) / 25;
+    divDistance.style.width = `${Math.round(100 * distancePercent)}%`;
+    let r = distancePercent;
     divDistance.style.backgroundColor = `rgb(${255 * r},${255 * (1 - r)},${0})`;
 
-    if (distance <= 0 || distance >= distance_max) {
+    if (gameEnd || distance <= 0 || distance >= distance_max) {
       window.clearTimeout(nextChange);
       window.clearInterval(checkInterval);
       ligne.classList.remove("fish-caught");

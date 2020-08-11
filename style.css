@@ -23,8 +23,11 @@ body {
 #game {
   position: relative;
   border: 1px solid black;
-  flex: 0 0 1366px;
-  height: 768px;
+  /* flex: 0 0 1366px;
+  height: 768px; */
+  flex: 0 0 min(100vw, calc(90vh * 16 / 9));
+  height: min(90vh, calc(100vw * 9 / 16));
+  margin-top: 5vh;
 }
 
 #paysage {
@@ -43,7 +46,7 @@ body {
 }
 
 #rive {
-  background-color: maroon;
+  background-color: saddlebrown;
   grid-area: rive;
 }
 
@@ -76,8 +79,8 @@ body {
 
 @keyframes wiggle {
   from {
-    height: calc(var(--delta-h) + 39%);
-    bottom: 21%;
+    height: calc(var(--delta-h) + 41%);
+    bottom: 19%;
   }
   to {
     height: calc(var(--delta-h) + 36%);
@@ -87,12 +90,12 @@ body {
 
 @keyframes fish-caught {
   from {
-    height: calc(var(--delta-h) + 39%);
-    bottom: 21%;
-  }
-  to {
     height: calc(var(--delta-h) + 40%);
     bottom: 20%;
+  }
+  to {
+    height: calc(var(--delta-h) + 42%);
+    bottom: 18%;
   }
 }
 
@@ -126,11 +129,11 @@ body {
 }
 
 .fish-pull {
-  animation: fish-pull .20s ease-out 0s infinite normal forwards;
+  animation: fish-pull 0.2s ease-out 0s infinite normal forwards;
 }
 
 .fish-caught {
-  animation: fish-caught .25s linear 0s infinite alternate backwards;
+  animation: fish-caught 0.25s linear 0s infinite alternate backwards;
 }
 
 .wiggle {
@@ -147,7 +150,7 @@ img {
   top: 0;
   left: 0;
   font-family: sans-serif;
-  font-size: x-large;
+  font-size: 2vw;
   width: 100%;
 }
 
@@ -176,15 +179,16 @@ img {
   width: 12%;
   height: 8%;
   transform: rotate(70deg) translate(40%, 110%) scale(var(--size));
-  animation: fish-pull-out 1s cubic-bezier(0.215, 0.610, 0.355, 1) 0s 1 normal forwards;
+  animation: fish-pull-out 1s cubic-bezier(0.215, 0.61, 0.355, 1) 0s 1 normal
+    forwards;
 }
 
 #fish.x-small {
-  --size: .65;
+  --size: 0.65;
 }
 
 #fish.small {
-  --size: .75;
+  --size: 0.75;
 }
 
 #fish.medium {
@@ -203,4 +207,18 @@ img {
   overflow-x: visible;
   color: whitesmoke;
   height: 10%;
+}
+
+#score,
+#time {
+  padding-left: 1%;
+}
+
+#overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 999;
 }
