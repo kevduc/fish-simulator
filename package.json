@@ -1,0 +1,15 @@
+{
+  "name": "peche-simulator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "start": "http-server -o"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "http-server": "^0.12.3"
+  }
+}
