@@ -1,5 +1,5 @@
 # fish-simulator
 
-Play here: https://kevduc.github.io/fish-simulator/
+Play here: https://kevduc.github.io/fishing-simulator/
 
-Pls rate this game 5⭐ if u enjoyed
+Please rate this game 5⭐ if you enjoyed
